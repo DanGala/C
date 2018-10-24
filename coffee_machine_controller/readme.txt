@@ -1,0 +1,1 @@
+This project implements a controller for a coffee machine, including both coffee preparation and cash handling behaviours. The source code has been implemented following three different approaches: a cyclic executive, a multithreaded program based on POSIX threads and a reactor design patter.

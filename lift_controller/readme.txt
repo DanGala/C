@@ -1,0 +1,1 @@
+This project implements a controller for a lift system, taking into consideration whether the lift is ascending, descending or stopped in a floor with it's doors open. It is implemented as a finite state machine and relies on libraries from the STM32Cube package, from STMicroelectronics.
