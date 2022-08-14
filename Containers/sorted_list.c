@@ -1,5 +1,8 @@
 #include "sorted_list.h"
 #include <string.h>
+#ifdef DEBUG
+#include <stdio.h>
+#endif
 
 /**
  * @brief Node constructor
@@ -33,6 +36,9 @@ static node_t *node_new(void *data, size_t type_size)
     }
 
     // Return a pointer to the new node structure
+#ifdef DEBUG
+    printf("Created node at %lx\n", (unsigned long int)new_node);
+#endif
     return new_node;
 }
 
@@ -48,23 +54,21 @@ static void node_destroy(node_t *node)
         // Free memory allocated to the node structure and its internal data
         free(node->data);
         free(node);
+#ifdef DEBUG
+    printf("Destroyed node at %lx\n", (unsigned long int)node);
+#endif
     }
 }
 
 /**
  * @brief Sorted list constructor
- * @param item_size Size of the items contained in the list in bytes
  * @param compare Comparison function used to decide if two items are sorted
  * @param sort Sorting algorithm to be used on the list
  * @return An owning pointer that points to the new list
  */
-sorted_list_t* sorted_list_new(size_t item_size, cmp_func_t compare, sort_func_t sort)
+sorted_list_t* sorted_list_new(cmp_func_t compare, sort_func_t sort)
 {
     sorted_list_t *new_list;
-
-    // Empty list items aren't supported
-    if (item_size == 0)
-        return NULL;
 
     // Reserve memory for the new list structure
     new_list = malloc(sizeof *new_list);
@@ -72,12 +76,14 @@ sorted_list_t* sorted_list_new(size_t item_size, cmp_func_t compare, sort_func_t
     {
         // Initialize the structure
         new_list->head = NULL;
-        new_list->item_size = item_size;
         new_list->compare = compare;
         new_list->sort = sort;
     }
 
     // Return a pointer to the new list structure
+#ifdef DEBUG
+    printf("Created new sorted list at %lx\n", (unsigned long int)new_list);
+#endif
     return new_list;
 }
 
@@ -90,8 +96,14 @@ void sorted_list_destroy(sorted_list_t *list)
     if (list != NULL)
     {
         // Destroy all nodes before freeing the memory allocated to the list structure
+#ifdef DEBUG
+    printf("Destroying list...\n");
+#endif
         sorted_list_clear(list);
         free(list);
+#ifdef DEBUG
+    printf("Destroyed list at %lx\n", (unsigned long int)list);
+#endif
     }
 }
 
@@ -130,15 +142,16 @@ size_t sorted_list_size(sorted_list_t *list)
 /**
  * @brief Insert an item into a list
  * @param list Pointer to the list structure
- * @param value Data to be stored within the new item
+ * @param data Data to be stored within the new item
+ * @param data_size Size of data in bytes
  * @return 0 on success, -1 on error
  */
-int sorted_list_insert(sorted_list_t *list, void *value)
+int sorted_list_insert(sorted_list_t *list, void *data, size_t data_size)
 {
     node_t *new_item;
 
     // Create a new node to encapsulate the data
-    new_item = node_new(value, list->item_size);
+    new_item = node_new(data, data_size);
     if (new_item == NULL)
         return -1;
 
@@ -147,7 +160,7 @@ int sorted_list_insert(sorted_list_t *list, void *value)
     list->head = new_item;
 
     // Sort the list using its comparison function and sorting algorithm
-    list->sort(list->head, list->compare);
+    list->sort(&list->head, list->compare);
 
     return 0;
 }
@@ -172,7 +185,7 @@ void sorted_list_pop_front(sorted_list_t *list, void *dest)
     // Data from the popped node is copied into destination if provided
     if (dest != NULL)
     {
-        memcpy(dest, popped_node->data, list->item_size);
+        memcpy(dest, popped_node->data, popped_node->data_size);
     }
     // Finally, the popped node is destroyed
     node_destroy(popped_node);
@@ -189,7 +202,7 @@ int sorted_list_peek_front(sorted_list_t *list, void *dest)
     if ((list != NULL) && (list->head != NULL) && (dest != NULL))
     {
         // Copy peeked data into its destination
-        memcpy(dest, list->head->data, list->item_size);
+        memcpy(dest, list->head->data, list->head->data_size);
         return 0;
     }
     return -1;
@@ -232,7 +245,7 @@ void sorted_list_pop_back(sorted_list_t *list, void *dest)
     // Data from the popped node is copied into destination if provided
     if (dest != NULL)
     {
-        memcpy(dest, popped_node->data, list->item_size);
+        memcpy(dest, popped_node->data, popped_node->data_size);
     }
     // Finally, the popped node is destroyed
     node_destroy(popped_node);
@@ -257,7 +270,7 @@ int sorted_list_peek_back(sorted_list_t *list, void *dest)
             iterator = iterator->next;
         }
         // Copy peeked data into its destination
-        memcpy(dest, iterator->data, list->item_size);
+        memcpy(dest, iterator->data, iterator->data_size);
         return 0;
     }
     return -1;
@@ -269,6 +282,9 @@ int sorted_list_peek_back(sorted_list_t *list, void *dest)
  */
 void sorted_list_clear(sorted_list_t *list)
 {
+#ifdef DEBUG
+    printf("Clearing list...\n");
+#endif
     while (sorted_list_empty(list) == 0)
     {
         // Destroy nodes by popping them into oblivion
