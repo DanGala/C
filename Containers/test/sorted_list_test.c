@@ -115,12 +115,7 @@ void merge_sort(node_t **head_ref, cmp_func_t compare)
     node_t *back;
 
     // If head is NULL or there is only one element in the linked list then then list is sorted
-    if ((head_ref == NULL) || (*head_ref == NULL) || ((*head_ref)->next == NULL))
-        return;
-
-    front = malloc(sizeof *front);
-    back = malloc(sizeof *back);
-    if ((back == NULL) || (front == NULL))
+    if ((head_ref == NULL) || (*head_ref == NULL) || ((*head_ref)->next == NULL) || (compare == NULL))
         return;
 
     // Divide the linked list into two halves
@@ -145,14 +140,21 @@ int main(int argc, char **argv)
 
     // Insert some nodes
     printf("Inserting some nodes...\n");
+    printf("Insert 'N'\n");
     sorted_list_insert(list, "N", 2); // include null-terminator for printing
+    printf("Insert 'B'\n");
     sorted_list_insert(list, "B", 2);
+    printf("Insert 'X'\n");
     sorted_list_insert(list, "X", 2);
+    printf("Insert 'D'\n");
     sorted_list_insert(list, "D", 2);
+    printf("Insert 'H'\n");
     sorted_list_insert(list, "H", 2);
+    printf("Insert 'F'\n");
     sorted_list_insert(list, "F", 2);
 
     // Print the list's contents
+    printf("\nListing nodes:\n");
     char_list_print(list);
     printf("List empty? %s\n", sorted_list_empty(list) ? "Yes" : "No");
     printf("List length: %zu\n", sorted_list_size(list));
