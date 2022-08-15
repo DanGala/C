@@ -13,7 +13,7 @@ static void string_stack_sprint(stack_t *stack, char * dest)
 
     if ((stack != NULL) && (dest != NULL))
     {
-        write_pointer += sprintf(write_pointer, "[ ");
+        write_pointer += sprintf(write_pointer, "<-> [ ");
         iterator = stack_top(stack);
         while (iterator != NULL)
         {
@@ -37,6 +37,7 @@ int main(int argc, char **argv)
     char test_buffer2[512] = { 0 };
 
     printf("\n--- Stack module unit test begins ---\n\n");
+    printf("Stack implemented as a LIFO: <-> [ top | X | X | X | X | bottom ]\n\n");
     
     // Create a stack of strings
     printf("Creating a stack...\n");
@@ -79,11 +80,11 @@ int main(int argc, char **argv)
 
     // Print the stack's contents
     string_stack_sprint(stack, test_buffer);
-    if (strncmp("[ F H D X B N ]", test_buffer, sizeof("[ F H D X B N ]")) != 0)
+    if (strncmp("<-> [ F H D X B N ]", test_buffer, sizeof("<-> [ F H D X B N ]")) != 0)
     {
         fprintf(stderr, "Error: stack contents do not match expectations\n");
         fprintf(stderr, "Actual:\n\t%s\n", test_buffer);
-        fprintf(stderr, "Expected:\n\t[ F H D X B N ]\n");
+        fprintf(stderr, "Expected:\n\t<-> [ F H D X B N ]\n");
         printf("\n--- Stack module unit test ends. Test result: FAILURE! ---\n");
         exit(1);
     }
@@ -115,11 +116,11 @@ int main(int argc, char **argv)
     pushed_nodes--;
     // Print the stack's contents
     string_stack_sprint(stack, test_buffer);
-    if (strncmp("[ H D X B N ]", test_buffer, sizeof("[ H D X B N ]")) != 0)
+    if (strncmp("<-> [ H D X B N ]", test_buffer, sizeof("<-> [ H D X B N ]")) != 0)
     {
         fprintf(stderr, "Error: stack contents do not match expectations\n");
         fprintf(stderr, "Actual:\n\t%s\n", test_buffer);
-        fprintf(stderr, "Expected:\n\t[ H D X B N ]\n");
+        fprintf(stderr, "Expected:\n\t<-> [ H D X B N ]\n");
         printf("\n--- Stack module unit test ends. Test result: FAILURE! ---\n");
         exit(1);
     }
@@ -139,11 +140,11 @@ int main(int argc, char **argv)
     pushed_nodes--;
     // Print the stack's contents
     string_stack_sprint(stack, test_buffer);
-    if (strncmp("[ D X B N ]", test_buffer, sizeof("[ D X B N ]")) != 0)
+    if (strncmp("<-> [ D X B N ]", test_buffer, sizeof("<-> [ D X B N ]")) != 0)
     {
         fprintf(stderr, "Error: stack contents do not match expectations\n");
         fprintf(stderr, "Actual:\n\t%s\n", test_buffer);
-        fprintf(stderr, "Expected:\n\t[ D X B N ]\n");
+        fprintf(stderr, "Expected:\n\t<-> [ D X B N ]\n");
         printf("\n--- Stack module unit test ends. Test result: FAILURE! ---\n");
         exit(1);
     }
@@ -190,11 +191,11 @@ int main(int argc, char **argv)
     pushed_nodes = 0;
     // Print the stack's contents
     string_stack_sprint(stack, test_buffer);
-    if (strncmp("[ ]", test_buffer, sizeof("[ ]")) != 0)
+    if (strncmp("<-> [ ]", test_buffer, sizeof("<-> [ ]")) != 0)
     {
         fprintf(stderr, "Error: stack contents do not match expectations\n");
         fprintf(stderr, "Actual:\n\t%s\n", test_buffer);
-        fprintf(stderr, "Expected:\n\t[ ]\n");
+        fprintf(stderr, "Expected:\n\t<-> [ ]\n");
         printf("\n--- Stack module unit test ends. Test result: FAILURE! ---\n");
         exit(1);
     }
@@ -234,11 +235,11 @@ int main(int argc, char **argv)
     // Print the stack's contents
     string_stack_sprint(stack, test_buffer);
     string_stack_sprint(stack2, test_buffer2);
-    if ((strncmp("[ H D ]", test_buffer, sizeof("[ H D ]")) != 0) || (strncmp("[ C ]", test_buffer2, sizeof("[ C ]")) != 0))
+    if ((strncmp("<-> [ H D ]", test_buffer, sizeof("<-> [ H D ]")) != 0) || (strncmp("<-> [ C ]", test_buffer2, sizeof("<-> [ C ]")) != 0))
     {
         fprintf(stderr, "Error: stack contents do not match expectations\n");
         fprintf(stderr, "Actual:\n\tStack 1: %s\n\tStack 2: %s\n", test_buffer, test_buffer2);
-        fprintf(stderr, "Expected:\n\tStack 1: [ H D ]\n\tStack 2: [ C ]\n");
+        fprintf(stderr, "Expected:\n\tStack 1: <-> [ H D ]\n\tStack 2: <-> [ C ]\n");
         printf("\n--- Stack module unit test ends. Test result: FAILURE! ---\n");
         exit(1);
     }
